@@ -14,6 +14,12 @@ variable "password" {
   description = "Password for basic authentication"
 }
 
+variable "ttl" {
+  type        = "string"
+  description = "The default TTL on records"
+  default     = 300
+}
+
 variable "stage_name" {
   type        = "string"
   default     = "nic"
@@ -22,9 +28,7 @@ variable "stage_name" {
 
 data "aws_caller_identity" "current" {}
 
-data "aws_region" "current" {
-  current = true
-}
+data "aws_region" "current" {}
 
 data "aws_iam_policy_document" "lambda-assume-role-policy" {
   statement {
@@ -56,12 +60,12 @@ resource "aws_lambda_function" "lambda" {
   description      = "DynDNS v2 API compatible front end for Route 53"
   function_name    = "route53-ddns"
   handler          = "route53_ddns.handler"
-  runtime          = "python2.7"
+  runtime          = "python3.7"
   filename         = "route53-ddns.zip"
-  source_code_hash = "${base64sha256(file("route53-ddns.zip"))}"
+  source_code_hash = "${filebase64sha256("route53-ddns.zip")}"
   role             = "${aws_iam_role.role.arn}"
 
-  environment = {
+  environment {
     variables = {
       DEBUG = "${var.debug}"
     }
@@ -72,12 +76,12 @@ resource "aws_lambda_function" "authorizer" {
   description      = "Authorizer for DynDNS v2 API compatible front end for Route 53"
   function_name    = "route53-ddns-authorizer"
   handler          = "route53_ddns_authorizer.handler"
-  runtime          = "python2.7"
+  runtime          = "python3.7"
   filename         = "route53-ddns-authorizer.zip"
-  source_code_hash = "${base64sha256(file("route53-ddns-authorizer.zip"))}"
+  source_code_hash = "${filebase64sha256("route53-ddns-authorizer.zip")}"
   role             = "${aws_iam_role.role.arn}"
 
-  environment = {
+  environment {
     variables = {
       DEBUG    = "${var.debug}"
       USERNAME = "${var.username}"

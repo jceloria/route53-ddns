@@ -37,7 +37,7 @@ def decode_authorization(auth_header):
                      (auth_header))
         raise OnlyBasicException()
 
-    decoded = base64.b64decode(split[1])
+    decoded = base64.b64decode(split[1]).decode('utf-8')
 
     username, password = decoded.split(':', 1)
     return (username, password)

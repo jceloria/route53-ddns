@@ -1,27 +1,27 @@
 variable "debug" {
-  type        = "string"
+  type        = string
   default     = "false"
   description = "Whether or not to enable debug logging in python lambda function"
 }
 
 variable "username" {
-  type        = "string"
+  type        = string
   description = "Username for basic authentication"
 }
 
 variable "password" {
-  type        = "string"
+  type        = string
   description = "Password for basic authentication"
 }
 
 variable "ttl" {
-  type        = "string"
+  type        = string
   description = "The default TTL on records"
   default     = 300
 }
 
 variable "stage_name" {
-  type        = "string"
+  type        = string
   default     = "nic"
   description = "Endpoint name to use for stage"
 }
@@ -141,7 +141,7 @@ resource "aws_api_gateway_integration" "integration" {
 }
 
 resource "aws_api_gateway_deployment" "deployment" {
-  depends_on = ["aws_api_gateway_method.method"]
+  depends_on = [aws_api_gateway_method.method]
 
   rest_api_id       = aws_api_gateway_rest_api.api.id
   stage_name        = var.stage_name

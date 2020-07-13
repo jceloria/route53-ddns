@@ -8,6 +8,6 @@ deploy: route53-ddns.tf deploy/route53-ddns.zip
 
 
 clean:
-	rm -f deploy/
+	rm -rf deploy/
 
 .PHONY: all clean plan deploy

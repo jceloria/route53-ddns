@@ -1,4 +1,4 @@
-all: plan
+all: deploy
 
 plan: route53-ddns.tf
 	terraform plan

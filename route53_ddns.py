@@ -103,8 +103,7 @@ def get_params(event):
     event['queryStringParameters'].pop('system', None)
 
     if len(event['queryStringParameters']) != 0:
-        msg = ("Unknown parameters:\n" +
-               json.dumps(event['queryStringParameters']))
+        msg = ("Unknown parameters:\n" + json.dumps(event['queryStringParameters']))
         raise Error(msg)
 
     return p

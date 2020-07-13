@@ -28,7 +28,7 @@ class TestRoute53DDNS(unittest.TestCase):
         self.assertEqual(
             c,
             ['hostname.domain.com.', 'domain.com.', 'com.']
-            )
+        )
 
     def test_parse_hostname_param(self):
         cases = [

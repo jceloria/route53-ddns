@@ -1,7 +1,8 @@
-*.zip
 *.pyc
-.tox
+*.sw*
+*.tfstate*
+*.tfvars*
+*.zip
 .terraform
-*.tfvars
-*.tfstate
+.tox
 remote-state.tf

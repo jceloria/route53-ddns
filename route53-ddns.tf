@@ -41,8 +41,20 @@ data "aws_iam_policy_document" "lambda-assume-role-policy" {
   }
 }
 
+data "archive_file" "route53_ddns" {
+  type        = "zip"
+  source_file = "${path.module}/route53_ddns.py"
+  output_path = "${path.module}/deploy/route53-ddns.zip"
+}
+
+data "archive_file" "route53_ddns_authorizer" {
+  type        = "zip"
+  source_file = "${path.module}/route53_ddns_authorizer.py"
+  output_path = "${path.module}/deploy/route53-ddns-authorizer.zip"
+}
+
 resource "aws_iam_role" "role" {
-  name               = "lambda_route53-ddns"
+  name               = "lambda-route53-ddns"
   assume_role_policy = data.aws_iam_policy_document.lambda-assume-role-policy.json
 }
 
@@ -61,8 +73,8 @@ resource "aws_lambda_function" "lambda" {
   function_name    = "route53-ddns"
   handler          = "route53_ddns.handler"
   runtime          = "python3.7"
-  filename         = "route53-ddns.zip"
-  source_code_hash = filebase64sha256("route53-ddns.zip")
+  filename         = data.archive_file.route53_ddns.output_path
+  source_code_hash = data.archive_file.route53_ddns.output_base64sha256
   role             = aws_iam_role.role.arn
 
   environment {
@@ -77,8 +89,8 @@ resource "aws_lambda_function" "authorizer" {
   function_name    = "route53-ddns-authorizer"
   handler          = "route53_ddns_authorizer.handler"
   runtime          = "python3.7"
-  filename         = "route53-ddns-authorizer.zip"
-  source_code_hash = filebase64sha256("route53-ddns-authorizer.zip")
+  filename         = data.archive_file.route53_ddns_authorizer.output_path
+  source_code_hash = data.archive_file.route53_ddns_authorizer.output_base64sha256
   role             = aws_iam_role.role.arn
 
   environment {

@@ -1,18 +1,13 @@
-all: deploy
+all: plan
 
-route53-ddns.zip: route53_ddns.py
-	zip -9 route53-ddns.zip route53_ddns.py
+plan: route53-ddns.tf
+	terraform plan
 
-route53-ddns-authorizer.zip: route53_ddns_authorizer.py
-	zip -9 route53-ddns-authorizer.zip route53_ddns_authorizer.py
-
-zip: route53-ddns.zip route53-ddns-authorizer.zip
-
-deploy: route53-ddns.tf route53-ddns.zip route53-ddns-authorizer.zip
+deploy: route53-ddns.tf deploy/route53-ddns.zip
 	terraform apply
 
 
 clean:
-	rm -f route53-ddns.zip route53-ddns-authorizer.zip
+	rm -f deploy/
 
-.PHONY: all clean deploy zip
+.PHONY: all clean plan deploy
